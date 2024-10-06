@@ -5,7 +5,7 @@
 1. 请确保您已经安装了edgetts库，如果没有请先安装。
 2. 请确保您已经安装了ffmpeg，并将FFmpeg加入PATH变量，如果没有请先下载并放入环境变量，这是pydub库所依赖的命令行工具。
 
-> pip install edgetts
+> pip install edge_tts
 
 > pip install pydub
 
