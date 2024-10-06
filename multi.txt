@@ -1,0 +1,7 @@
+1 null, eins, zwei, drei, vier, fünf, sechs, sieben, acht, neun, zehn, elf, zwölf
+2 dreizehn, vierzehn, fünfzehn, sechzehn, siebzehn, achtzehn, neunzehn
+3 zwanzig, dreißig, vierzig, fünfzig, sechzig, siebzig, achtzig, neunzig
+4 einundzwanzig, zweiundzwanzig, dreiundzwanzig, vierundzwanzig, fünfundzwanzig, sechsundzwanzig, siebenundzwanzig, achtundzwanzig, neunundzwanzig
+5 einunddreißig, zweiundvierzig, dreiundfünfzig, vierundsechzig, fünfundsiebzig, sechsundachtzig, siebenundneunzig, einhundert      
+6 einhundert, zweihundert, dreihundert, neunhundert, tausend, tausend eins, tausend zwölf, tausend sechsundsiebzig, tausend einhundert, tausend einhundertzwei, tausend einhundertelf, tausend zweihundert, tausend dreihundertfünfundvierzig
+1 einhunderteins, einhundertzwei, einhundertzwölf, zweihundertfünfundsechzig, neunhundertneunundneunzig, zweitausend, zehntausend, neunundsechzigtausend, einhunderttausend, eine Million, zwei Millionen, eine Milliarde, eine Billion
