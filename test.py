@@ -40,8 +40,8 @@ async def get_available_list():
     elif not os.path.exists(fm.file_path2):
         to_select = await edge_tts.list_voices()  # 调用edge_tts库的list_voices函数
         filtered_list = [voice for voice in to_select if voice['Status'] != 'GA']
-    with open(fm.file_path2, 'w', encoding='utf-8') as f:
-        json.dump(to_select, f, ensure_ascii=False, indent=4)
+        with open(fm.file_path2, 'w', encoding='utf-8') as f:
+            json.dump(to_select, f, ensure_ascii=False, indent=4)
     return filtered_list
 to_select = asyncio.run(get_available_list())
 
@@ -118,6 +118,5 @@ async def start_generate():
         fm.y+=1
     combined.export(fm.final_output)
     os.removedirs(fm.temp_dir)
-
 asyncio.run(start_generate())
 print("\nDone!")
