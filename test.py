@@ -1,7 +1,6 @@
 import edge_tts
 import asyncio
 import re
-from pydub import AudioSegment
 import os 
 import json
 class FileManager:
@@ -30,6 +29,18 @@ class FileManager:
         await generate.save(filepath)
         self.x += 1  # 更新计数器
         self.audios.append(filepath)  # 更新音频列表
+        
+    def concatenate_mp3_files(self,output_path, *input_files):
+        print("\nCombining audio files...")
+        with open(output_path, 'wb') as outfile:
+            for file in input_files:
+                print("\rCombined Part{}".format(fm.y),end="")
+                fm.y+=1
+                with open(file, 'rb') as infile:
+                    outfile.write(infile.read())  # 直接写入文件的二进制数据
+                os.remove(file)  # 删除临时文件
+        os.removedirs(fm.temp_dir)
+        print(f"\nDone!Your file here:{output_path}")
 fm = FileManager()
 
 async def get_available_list():
@@ -83,7 +94,6 @@ def speed_control(speed):
         raise ValueError("Invalid Input")  # 处理无效输入
     
 async def start_generate():
-    combined = AudioSegment.empty()
     for key in fm.human_use:
         print(str(fm.i)+'. '+key)
         fm.friendly[fm.i] = key
@@ -109,14 +119,5 @@ async def start_generate():
     else:
         print("Invalid mode, please try again.")
 
-    print("\nCombining audio files...")
-    for audio in fm.audios:
-        audio_segment = AudioSegment.from_file(audio, format="mp3")
-        combined += audio_segment
-        os.remove(audio)
-        print("\rCombined Part{}".format(fm.y),end="")
-        fm.y+=1
-    combined.export(fm.final_output)
-    os.removedirs(fm.temp_dir)
+    fm.concatenate_mp3_files(fm.final_output, *fm.audios)
 asyncio.run(start_generate())
-print("\nDone!")
