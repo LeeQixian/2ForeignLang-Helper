@@ -31,10 +31,9 @@ class FileManager:
         self.audios.append(filepath)  # 更新音频列表
         
     def concatenate_mp3_files(self,output_path, *input_files):
-        print("\nCombining audio files...")
         with open(output_path, 'wb') as outfile:
             for file in input_files:
-                print("\rCombined Part{}".format(fm.y),end="")
+                print("\rCombining Part{}".format(fm.y),end="")
                 fm.y+=1
                 with open(file, 'rb') as infile:
                     outfile.write(infile.read())  # 直接写入文件的二进制数据
