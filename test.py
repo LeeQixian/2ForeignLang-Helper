@@ -3,6 +3,20 @@ import asyncio
 import re
 import os 
 import json
+import argparse
+def parse_args():
+    parser = argparse.ArgumentParser(description='Test for edge_tts')
+    parser.add_argument('--lang', type=str, help='language to use')
+    parser.add_argument('--mode', type=str, help='the mode and speed')
+    args = parser.parse_args()
+    if args.lang is None:
+        args.lang = input("Please enter the language , choose from De, Es, Fr, Jp, AmE, BrE:\n")
+    
+    if args.mode is None:
+        args.mode = input("enter the mode and speed you prefer, separated by space:\n1. manual dialogues 2.load multi-dialogue\na.Normal b. Low\n")
+    return args
+
+args = parse_args()
 class FileManager:
     def __init__(self):
         self.human_use = {}
@@ -82,7 +96,7 @@ def get_list_ready(lang,list):
                 if re.search(pattern_in_use, value):
                     fm.practical_use[key] = value
 #practical_use = {Killian de-DE-KillianNeural } human_use = {Killian Killian-German(Germany)}
-get_list_ready(input("Please enter the language , choose from De, Es, Fr, Jp, AmE, BrE:\n"),to_select)
+get_list_ready(args.lang,to_select)
 
 def speed_control(speed):
     if speed == 'a':
@@ -97,7 +111,7 @@ async def start_generate():
         print(str(fm.i)+'. '+key)
         fm.friendly[fm.i] = key
         fm.i += 1 
-    mode , speed= input("enter the mode and speed you prefer, separated by space:\n1. manual dialogues 2.load multi-dialogue\na.Normal b. Low\n").split()
+    mode , speed= args.mode.split()
     if mode == '1':
         while True:
             input1 = input("Press Enter quit, or choose the speaker\n")
