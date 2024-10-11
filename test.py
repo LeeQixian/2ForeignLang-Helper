@@ -15,7 +15,6 @@ def parse_args():
     if args.mode is None:
         args.mode = input("enter the mode and speed you prefer, separated by space:\n1. manual dialogues 2.load multi-dialogue\na.Normal b. Low\n")
     return args
-
 args = parse_args()
 class FileManager:
     def __init__(self):
@@ -105,20 +104,23 @@ def speed_control(speed):
         return "-30%"  # 对于低速，返回相应的参数
     else:
         raise ValueError("Invalid Input")  # 处理无效输入
-    
-async def start_generate():
+def process_available_list(mode):
     for key in fm.human_use:
-        print(str(fm.i)+'. '+key)
         fm.friendly[fm.i] = key
         fm.i += 1 
+    if mode == '1':
+        print(fm.human_use)
+
+async def start_generate():
     mode , speed= args.mode.split()
+    process_available_list(mode)
     if mode == '1':
         while True:
-            input1 = input("Press Enter quit, or choose the speaker\n")
+            input1 = input("Enter to quit. Or choose the speaker,then enter the text, separated by space:\n")
             if input1 == "":
                 break  # 退出循环
-            voice = fm.practical_use[fm.friendly[int(input1)]]
-            text = input("Text: ")
+            voice = fm.practical_use[fm.friendly[int(input1.split()[0])]]
+            text = (" ").join(input1.split()[1:])
             await fm.single_play(text,voice,speed)
     elif mode == '2':     #input("Enter the file name")
         with open(fm.file_path1, 'r', encoding='utf-8') as f:
@@ -129,6 +131,7 @@ async def start_generate():
             voice = fm.practical_use[fm.friendly[int(line.split()[0])]]
             text = ' '.join(line.split()[1:])
             await fm.single_play(text,voice,speed)
+        print("\nStart Concatenating...")
     else:
         print("Invalid mode, please try again.")
 
