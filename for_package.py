@@ -133,7 +133,10 @@ def process_available_list(mode):
         fm.friendly[fm.i] = key
         fm.i += 1 
     if mode == '1':
-        print(fm.human_use)
+        i = 1
+        for key,value in fm.human_use.items():
+            print(f"{i}. {key}")
+            i += 1
 
 async def start_generate():
     mode , speed= args.mode.split()
