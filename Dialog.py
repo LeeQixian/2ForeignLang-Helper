@@ -4,16 +4,25 @@ import re
 import os 
 import json
 import argparse
+import sys
 def parse_args():
     parser = argparse.ArgumentParser(description='Test for edge_tts')
     parser.add_argument('--lang', type=str, help='language to use')
     parser.add_argument('--mode', type=str, help='the mode and speed')
+    parser.add_argument('--name', type=str, help='whether to name the output file')
     args = parser.parse_args()
     if args.lang is None:
         args.lang = input("Please enter the language , choose from De, Es, Fr, Jp, AmE, BrE:\n")
     
     if args.mode is None:
         args.mode = input("enter the mode and speed you prefer, separated by space:\n1. manual dialogues 2.load multi-dialogue\na.Normal b. Low\n")
+    
+    if args.name is None:
+        user_input = input("Enter the name of the output file, or enter to use default name:\n")
+        if user_input == "":
+            args.name = "Final"
+        else:
+            args.name = user_input
     return args
 args = parse_args()
 class FileManager:
@@ -24,12 +33,21 @@ class FileManager:
         self.more_info = {}
         self.friendly = {}
 
-        self.current_dir = os.path.dirname(__file__)
+        # 判断程序是否被打包
+        if getattr(sys, 'frozen', False):
+            # 当脚本被打包成可执行文件时
+            self.current_dir = os.path.dirname(sys.executable)
+        else:
+            self.current_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # 设置当前工作目录为程序所在目录
+        os.chdir(self.current_dir)
+
         self.temp_dir = os.path.join(self.current_dir, 'Temp')
-        self.final_output = os.path.join(self.current_dir, 'Test_Final.mp3')
+        self.final_output = os.path.join(self.current_dir, args.name + '.mp3')
         self.file_path1 = os.path.join(self.current_dir, "multi.txt")
         self.file_path2 = os.path.join(self.current_dir, "voice_list.json")
-
+        
         self.audios = []
         self.i = 1
         self.x = 1
@@ -58,8 +76,14 @@ fm = FileManager()
 async def get_available_list():
     print("loading available voice list...")
     if os.path.exists(fm.file_path2):
-        with open(fm.file_path2, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        try:
+            with open(fm.file_path2, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                print("Loaded voice list!")
+                return data
+        except Exception as e:
+            print(f"Failed to load voice list, error: {e}")
+            return []
     elif not os.path.exists(fm.file_path2):
         to_select = await edge_tts.list_voices()  # 调用edge_tts库的list_voices函数
         filtered_list = [voice for voice in to_select if voice['Status'] != 'GA']
@@ -118,13 +142,19 @@ async def start_generate():
     mode , speed= args.mode.split()
     process_available_list(mode)
     if mode == '1':
+        texts = []
+        voices = []
         while True:
             input1 = input("Enter to quit. Or choose the speaker,then enter the text, separated by space:\n")
             if input1 == "":
                 break  # 退出循环
             voice = fm.practical_use[fm.friendly[int(input1.split()[0])]]
+            voices.append(voice)
             text = (" ").join(input1.split()[1:])
-            await fm.single_play(text,voice,speed)
+            texts.append(text)
+        for text, voice in zip(texts, voices):
+            print(f"Generating {text} with {voice}...")
+            await fm.single_play(text, voice, speed)
     elif mode == '2':     #input("Enter the file name")
         with open(fm.file_path1, 'r', encoding='utf-8') as f:
             lines = f.readlines()
