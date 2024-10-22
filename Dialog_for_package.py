@@ -142,13 +142,19 @@ async def start_generate():
     mode , speed= args.mode.split()
     process_available_list(mode)
     if mode == '1':
+        texts = []
+        voices = []
         while True:
             input1 = input("Enter to quit. Or choose the speaker,then enter the text, separated by space:\n")
             if input1 == "":
                 break  # 退出循环
             voice = fm.practical_use[fm.friendly[int(input1.split()[0])]]
+            voices.append(voice)
             text = (" ").join(input1.split()[1:])
-            await fm.single_play(text,voice,speed)
+            texts.append(text)
+        for text, voice in zip(texts, voices):
+            print(f"Generating {text} with {voice}...")
+            await fm.single_play(text, voice, speed)
     elif mode == '2':     #input("Enter the file name")
         with open(fm.file_path1, 'r', encoding='utf-8') as f:
             lines = f.readlines()
