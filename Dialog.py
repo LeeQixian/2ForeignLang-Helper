@@ -17,12 +17,20 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Test for edge_tts')
     parser.add_argument('--lang', type=str, help='language to use')
     parser.add_argument('--mode', type=str, help='the mode and speed')
+    parser.add_argument('--name', type=str, help='whether to name the output file')
     args = parser.parse_args()
     if args.lang is None:
         args.lang = input("Please enter the language , choose from De, Es, Fr, Jp, AmE, BrE:\n")
     
     if args.mode is None:
         args.mode = input("enter the mode and speed you prefer, separated by space:\n1. manual dialogues 2.load multi-dialogue\na.Normal b. Low\n")
+    
+    if args.name is None:
+        user_input = input("Enter the name of the output file, or enter to use default name:\n")
+        if user_input == "":
+            args.name = "Final"
+        else:
+            args.name = user_input
     return args
 args = parse_args()
 class FileManager:
@@ -44,7 +52,7 @@ class FileManager:
         os.chdir(self.current_dir)
 
         self.temp_dir = os.path.join(self.current_dir, 'Temp')
-        self.final_output = os.path.join(self.current_dir, 'Test_Final.mp3')
+        self.final_output = os.path.join(self.current_dir, args.name + '.mp3')
         self.file_path1 = os.path.join(self.current_dir, "multi.txt")
         self.file_path2 = os.path.join(self.current_dir, "voice_list.json")
         
