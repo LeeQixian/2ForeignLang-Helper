@@ -12,7 +12,7 @@ def parse_args():
     parser.add_argument('--name', type=str, help='whether to name the output file')
     args = parser.parse_args()
     if args.lang is None:
-        args.lang = input("Please enter the language , choose from De, Es, Fr, Jp, AmE, BrE:\n")
+        args.lang = input("Please enter the language , choose from De, Es, Fr, Jp, AmE, BrE, zh:\n")
     
     if args.mode is None:
         args.mode = input("enter the mode and speed you prefer, separated by space:\n1. manual dialogues 2.load multi-dialogue\na.Normal b. Low\n")
@@ -106,7 +106,8 @@ def get_list_ready(lang,list):
         'Fr': [r'French\(France\)', r'fr-FR'],
         'Jp':[r'Japanese\(Japan\)', r'ja-JP'],
         'AmE':[r'English\(UnitedStates\)', r'en-US'],
-        'BrE':[r'English\(UnitedKingdom\)', r'en-GB']
+        'BrE':[r'English\(UnitedKingdom\)', r'en-GB'],
+        'zh':[r'Chinese\(Mainland\)', r'zh-CN']
     }
     if lang in lang_patterns:
         for pattern in lang_patterns[lang]:
