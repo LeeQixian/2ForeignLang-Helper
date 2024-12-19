@@ -5,6 +5,7 @@ import os
 import json
 import argparse
 import sys
+import random
 def resource_path(relative_path):
     if getattr(sys, 'frozen', False):
         # 当脚本被打包成可执行文件时
@@ -169,8 +170,12 @@ async def start_generate():
         os.makedirs(fm.temp_dir, exist_ok=True)
         for line in lines:
             print("\rGenerating Part{}".format(fm.x),end="")
-            voice = fm.practical_use[fm.friendly[int(line.split()[0])]]
-            text = ' '.join(line.split()[1:])
+            if line.split()[0] not in fm.friendly:
+                voice = random.choice(list(fm.practical_use.values()))
+                text = ' '.join(line.split())
+            else:
+                voice = fm.practical_use[fm.friendly[int(line.split()[0])]]
+                text = ' '.join(line.split()[1:])
             await fm.single_play(text,voice,speed)
         print("\nStart Concatenating...")
     else:
