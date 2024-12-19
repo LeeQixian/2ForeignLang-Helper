@@ -4,6 +4,7 @@ import re
 import os 
 import json
 import argparse
+import random
 import sys
 def parse_args():
     parser = argparse.ArgumentParser(description='Test for edge_tts')
@@ -162,12 +163,18 @@ async def start_generate():
         os.makedirs(fm.temp_dir, exist_ok=True)
         for line in lines:
             print("\rGenerating Part{}".format(fm.x),end="")
-            voice = fm.practical_use[fm.friendly[int(line.split()[0])]]
-            text = ' '.join(line.split()[1:])
+            if line.split()[0] is not int:
+                choices = range(1, len(fm.human_use) + 1)
+                voice = fm.practical_use[fm.friendly[random.choice(choices)]]
+                text = ' '.join(line.split())
+            elif line.split()[0] is int:
+                voice = fm.practical_use[fm.friendly[int(line.split()[0])]]
+                text = ' '.join(line.split()[1:])
             await fm.single_play(text,voice,speed)
         print("\nStart Concatenating...")
     else:
         print("Invalid mode, please try again.")
 
     fm.concatenate_mp3_files(fm.final_output, *fm.audios)
-asyncio.run(start_generate())
+if __name__ == "__main__":
+    asyncio.run(start_generate())
