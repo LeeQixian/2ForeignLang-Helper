@@ -7,6 +7,7 @@ import re
 from urllib3.util.retry import Retry
 from bs4 import Tag,Comment
 from requests.adapters import HTTPAdapter
+import json
 
 def process_cookies(str):
     cookies_dict = dict(cookie.split('=') for cookie in str.split('; '))
@@ -175,10 +176,7 @@ class processor:
 class crawler:
     def __init__(self):
         self.session = requests.Session()
-        self.cookies = {
-                            'pgv_pvid': '69877000',
-                            'EudicWebSession': 'QYNeyJoYXNfb2xkX3Bhc3N3b3JkIjpmYWxzZSwidG9rZW4iOiJmL3NzVUxNTUhQMVB3L1B2STcxVTYxV3pMeEE9IiwiZXhwaXJlaW4iOjEzMTQwMDAsInVzZXJpZCI6IjM2ZWIzOGVmLTZlYjktMTFlZi04MTA4LTAwNTA1Njg2NmVkYSIsInVzZXJuYW1lIjoiemtrYnhsZjF1QG1vem1haWwuY29tIiwiY3JlYXRpb25fZGF0ZSI6IjIwMjQtMDktMDlUMDY6Mzg6NDVaIiwicm9sZXMiOm51bGwsIm9wZW5pZF90eXBlIjpudWxsLCJvcGVuaWRfZGVzYyI6bnVsbCwicHJvZmlsZSI6eyJuaWNrbmFtZSI6IuadjuS4g%252bW8piIsImVtYWlsIjoiemtrYnhsZjF1QG1vem1haWwuY29tIiwiZ2VuZGVyIjpudWxsLCJwYXNzd29yZCI6bnVsbCwidm9jYWJ1bGFyaWVzIjp7fX0sImxhc3RfcGFzc3dvcmRfY2hhbmdlZF9kYXRlIjoiMjAyNC85LzkgMTQ6Mzg6NDUiLCJyZWRpcmVjdF91cmwiOm51bGx9'
-                        }
+        self.cookies = json.load(open('./cookies.json'))
         self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0',}
         self.results_dict = {}
         self.session.headers.update(self.headers)
